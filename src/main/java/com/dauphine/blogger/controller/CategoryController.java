@@ -6,7 +6,6 @@ import com.dauphine.blogger.services.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
