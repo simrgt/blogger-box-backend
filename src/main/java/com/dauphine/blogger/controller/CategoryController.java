@@ -1,6 +1,7 @@
 package com.dauphine.blogger.controller;
 
 import com.dauphine.blogger.models.Category;
+import com.dauphine.blogger.services.CategoryService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -20,13 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/v1/categories")
 public class CategoryController {
-    private final List<Category> temporaryCategories;
+    private final CategoryService service;
 
-    public CategoryController() {
-        temporaryCategories = new ArrayList<>();
-        temporaryCategories.add(new Category(UUID.randomUUID(), "my first category"));
-        temporaryCategories.add(new Category(UUID.randomUUID(), "my second category"));
-        temporaryCategories.add(new Category(UUID.randomUUID(), "my third category"));
+    public CategoryController(CategoryService service) {
+        this.service = service;
     }
 
     @GetMapping
@@ -35,7 +33,7 @@ public class CategoryController {
         description = "Returns all categories"
     )
     public List<Category> getCategories() {
-        return temporaryCategories;
+        return service.getAll();
     }
 
     @GetMapping("/{id}")
@@ -44,10 +42,7 @@ public class CategoryController {
         description = "Returns category by id"
     )
     public Category getCategoryById(@RequestBody UUID id) {
-        return temporaryCategories.stream()
-                .filter(category -> category.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
+        return service.getById(id);
     }
 
     @PostMapping
@@ -56,9 +51,7 @@ public class CategoryController {
         description = "Creates a new category"
     )
     public Category createCategory(@RequestBody Category category) {
-        Category newCategory = new Category(UUID.randomUUID(), category.getName());
-        temporaryCategories.add(newCategory);
-        return newCategory;
+        return service.create(category.getName());
     }
 
     @PutMapping("/{id}")
@@ -67,14 +60,7 @@ public class CategoryController {
         description = "Updates an existing category"
     )
     public Category updateCategory(@PathVariable UUID id, @RequestBody Category category) {
-        return temporaryCategories.stream()
-                .filter(existingCategory -> existingCategory.getId().equals(id))
-                .findFirst()
-                .map(existingCategory -> {
-                    existingCategory.setName(category.getName());
-                    return existingCategory;
-                })
-                .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
+        return service.updateName(id, category.getName());
     }
 
     @DeleteMapping("/{id}")
@@ -82,12 +68,7 @@ public class CategoryController {
         summary = "Delete category",
         description = "Deletes an existing category"
     )
-    public void deleteCategory(@PathVariable UUID id) {
-        Category categoryToRemove = temporaryCategories.stream()
-                .filter(existingCategory -> existingCategory.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
-        
-        temporaryCategories.remove(categoryToRemove);
+    public boolean deleteCategory(@PathVariable UUID id) {
+        return service.delete(id);
     }
 }
