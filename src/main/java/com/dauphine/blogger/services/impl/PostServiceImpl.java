@@ -1,11 +1,11 @@
 package com.dauphine.blogger.services.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.dauphine.blogger.exception.PostNotFoundByIdException;
 import com.dauphine.blogger.models.Category;
 import com.dauphine.blogger.models.Post;
 import com.dauphine.blogger.repositories.PostRepository;
@@ -25,8 +25,18 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post getById(UUID id) {
-        return repository.findById(id).orElse(null);
+    public List<Post> getAllLikeTitle(String title) {
+        return repository.findAllLikeTitle(title);
+    }
+
+    @Override
+    public List<Post> getAllLikeContent(String content) {
+        return repository.findAllLikeContent(content);
+    }
+
+    @Override
+    public Post getById(UUID id) throws PostNotFoundByIdException{
+        return repository.findById(id).orElseThrow(() -> new PostNotFoundByIdException(id));
     }
 
     @Override
@@ -62,9 +72,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> getByCategory(UUID categoryId) {
-        return repository.findAll().stream()
-                .filter(post -> post.getCategory().getId().equals(categoryId))
-                .toList();
+        return repository.findByCategory(categoryId);
     }
 
 }
