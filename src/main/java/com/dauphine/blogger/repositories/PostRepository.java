@@ -4,7 +4,8 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.dauphine.blogger.models.Category;
+import com.dauphine.blogger.models.Post;
 
-public interface CategoryRepository extends JpaRepository<Category, UUID> {
+public interface PostRepository extends JpaRepository<Post, UUID> {
+
 }

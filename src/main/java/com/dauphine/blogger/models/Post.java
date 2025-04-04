@@ -1,6 +1,6 @@
 package com.dauphine.blogger.models;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -25,7 +25,7 @@ public class Post {
     private String content;
 
     @Column(name = "created_at")
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -35,12 +35,12 @@ public class Post {
         // Default constructor
     }
 
-    public Post(UUID id, String title, String content, Timestamp createdAt, Category category) {
-        this.id = id;
+    public Post(String title, String content, Category category) {
+        this.id = UUID.randomUUID();
         this.title = title;
         this.content = content;
-        this.createdAt = createdAt;
         this.category = category;
+        this.createdAt = LocalDateTime.now();
     }
 
     public UUID getId() {
@@ -67,11 +67,11 @@ public class Post {
         this.content = content;
     }
 
-    public Timestamp getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
