@@ -68,6 +68,6 @@ public class CategoryController {
         description = "Deletes an existing category"
     )
     public boolean deleteCategory(@PathVariable UUID id) {
-        return service.delete(id);
+        return service.deleteById(id);
     }
 }
